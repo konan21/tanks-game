@@ -1,8 +1,10 @@
-export abstract class AbstractState<C> {
-  public context: C; // state identity context - determining state transition logic
+export abstract class AbstractState<M, V> {
+  protected model: M;
+  protected view: V;
 
-  constructor(context: C) {
-    this.context = context;
+  constructor(model: M, view: V) {
+    this.model = model;
+    this.view = view;
   }
 
   /**
