@@ -14,71 +14,71 @@ import {ETanksGameCommandNames} from "./enum/ETanksGameCommandNames";
 import {TanksGameLoadAssetsCommand} from "./controller/commands/TanksGameLoadAssetsCommand";
 
 export class TanksGameContext implements ITanksGameContext<ITanksGameModel, ITanksGameView, ITanksGameController> {
-  private _model: TanksGameModel;
-  private _view: TanksGameView;
-  private _controller: TanksGameController;
-  private _ticker: Ticker;
+    private _model: TanksGameModel;
+    private _view: TanksGameView;
+    private _controller: TanksGameController;
+    private _ticker: Ticker;
 
-  constructor() {
-    this.init();
-    // TODO: Start Loading gameConfig from assets (run command etc.)
-  }
+    constructor() {
+        this.init();
+        // TODO: Start Loading gameConfig from assets (run command etc.)
+    }
 
-  public init(): void {
-    this.createModel();
-    this.createView();
-    this.createController();
-    this.createTicker();
-    this.registerCommands();
-    this.executeCommands();
-  }
+    public init(): void {
+        this.createModel();
+        this.createView();
+        this.createController();
+        this.createTicker();
+        this.registerCommands();
+        this.executeCommands();
+    }
 
-  public gameLoop(deltaTime: number): void {
-    // TODO: set deltaTIme to model
-    // TODO: redraw command (run framesUpdate method from View with deltaTime parameter from Model) and others commands
-  }
+    public gameLoop(deltaTime: number): void {
+        // TODO: set deltaTIme to model
+        // TODO: redraw command (run framesUpdate method from View with deltaTime parameter from Model) and others commands
+    }
 
-  public getModel(): ITanksGameModel {
-    return this._model;
-  }
+    public getModel(): ITanksGameModel {
+        return this._model;
+    }
 
-  public getView(): ITanksGameView {
-    return this._view;
-  }
+    public getView(): ITanksGameView {
+        return this._view;
+    }
 
-  public getController(): ITanksGameController {
-    return this._controller;
-  }
+    public getController(): ITanksGameController {
+        return this._controller;
+    }
 
-  private createModel(): void {
-    this._model = new TanksGameModel();
-  }
+    private createModel(): void {
+        this._model = new TanksGameModel();
+    }
 
-  private createView(): void {
-    this._view = new TanksGameView({
-      width: this._model.width,
-      height: this._model.height,
-      backgroundColor: 0x000000,
-    });
-  }
+    private createView(): void {
+        this._view = new TanksGameView({
+            width: this._model.width,
+            height: this._model.height,
+            backgroundColor: 0x000000,
+        });
+    }
 
-  private createController(): void {
-    this._controller = new TanksGameController(this);
-  }
+    private createController(): void {
+        this._controller = new TanksGameController(this);
+    }
 
-  private registerCommands(): void {
-    this._controller.registerCommand(ETanksGameCommandNames.LOAD_ASSETS, TanksGameLoadAssetsCommand);
-  }
+    private registerCommands(): void {
+        this._controller.registerCommand(ETanksGameCommandNames.LOAD_ASSETS, TanksGameLoadAssetsCommand);
+    }
 
-  private executeCommands(): void {
-    this._controller.executeCommand(ETanksGameCommandNames.LOAD_ASSETS);
-  }
+    private executeCommands(): void {
+        this._controller.executeCommand(ETanksGameCommandNames.LOAD_ASSETS);
+    }
 
-  private createTicker(): void {
-    this._ticker = Ticker.shared;
-    this._ticker.add(this.gameLoop, this);
-    this._ticker.start();
-  }
+    private createTicker(): void {
+        this._ticker = Ticker.shared;
+        this._ticker.add(this.gameLoop, this);
+        this._ticker.start();
+    }
 }
 
 new TanksGameContext();

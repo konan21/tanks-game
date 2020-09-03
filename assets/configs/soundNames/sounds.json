@@ -1,8 +1,8 @@
 {
-  "BONUS": "bonus.wav",
-  "EXPLODE": "explode.wav",
-  "HIT": "hit.wav",
-  "LOSE": "lose.wav",
-  "SHOT": "shot.wav",
-  "WIN": "win.wav"
+    "BONUS": "bonus.wav",
+    "EXPLODE": "explode.wav",
+    "HIT": "hit.wav",
+    "LOSE": "lose.wav",
+    "SHOT": "shot.wav",
+    "WIN": "win.wav"
 }

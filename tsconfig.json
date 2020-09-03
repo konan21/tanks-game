@@ -1,17 +1,19 @@
 {
-  "compilerOptions": {
-    "target": "ES2015",
-    "module": "CommonJS",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "allowJs": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": false,
-    "strictPropertyInitialization": false,
-    "esModuleInterop": true,
-    "removeComments": true
-  },
-  "include": ["./src"],
-  "exclude": ["./node_modules", "./webpack.*.js", "./dist"]
+    "compilerOptions": {
+        "target": "ES2015",
+        "module": "CommonJS",
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "allowJs": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": false,
+        "strictPropertyInitialization": false,
+        "esModuleInterop": true,
+        "removeComments": true,
+        "typeRoots": ["node_modules/@types"],
+        "types": ["pixi.js", "pixi-spine"]
+    },
+    "include": ["./src/**/*.ts"],
+    "exclude": ["./node_modules", "./webpack.*.js", "./dist"]
 }

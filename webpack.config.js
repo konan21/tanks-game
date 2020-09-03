@@ -4,44 +4,44 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  mode: "development",
-  devtool: "inline-source-map",
-  entry: ["./src/TanksGameContext.ts"],
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        loader: "ts-loader",
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.(scss|css)$/,
-        use: ["style-loader", "css-loader", "sass-loader"],
-      },
+    mode: "development",
+    devtool: "inline-source-map",
+    entry: ["./src/TanksGameContext.ts"],
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                loader: "ts-loader",
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.(scss|css)$/,
+                use: ["style-loader", "css-loader", "sass-loader"],
+            },
+        ],
+    },
+    resolve: {
+        extensions: [".ts", ".js"],
+    },
+    output: {
+        path: path.resolve(__dirname, "dist"),
+        filename: "bundle.js",
+    },
+    plugins: [
+        new CleanWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            title: "Tanks",
+            template: "./index.html",
+            filename: "./index.html",
+            hash: true,
+        }),
+        new CopyWebpackPlugin({
+            patterns: [{from: "./assets", to: "./assets"}],
+        }),
     ],
-  },
-  resolve: {
-    extensions: [".ts", ".js"],
-  },
-  output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
-  },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      title: "Tanks",
-      template: "./index.html",
-      filename: "./index.html",
-      hash: true,
-    }),
-    new CopyWebpackPlugin({
-      patterns: [{from: "./assets", to: "./assets"}],
-    }),
-  ],
-  devServer: {
-    contentBase: path.join(__dirname, "dist"),
-    compress: true,
-    port: 9000,
-  },
+    devServer: {
+        contentBase: path.join(__dirname, "dist"),
+        compress: true,
+        port: 9000,
+    },
 };

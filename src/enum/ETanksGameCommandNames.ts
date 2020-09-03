@@ -1,3 +1,3 @@
 export enum ETanksGameCommandNames {
-  LOAD_ASSETS = "TanksGameLoadAssets",
+    LOAD_ASSETS = "TanksGameLoadAssets",
 }

@@ -1,3 +1,3 @@
 export interface ITanksGameView {
-  framesUpdate(deltaTime: number): void;
+    framesUpdate(deltaTime: number): void;
 }

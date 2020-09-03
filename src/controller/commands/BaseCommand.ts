@@ -1,23 +1,26 @@
-export class BaseCommand<M, V> {
-  private _model: M;
-  private _view: V;
+import {ITanksGameModel} from "../../interface/ITanksGameModel";
+import {ITanksGameView} from "../../interface/ITanksGameView";
 
-  constructor(model: M, view: V) {
-    this.init(model, view);
-  }
+export class BaseCommand<M extends ITanksGameModel, V extends ITanksGameView> {
+    private _model: M;
+    private _view: V;
 
-  public execute(): void {}
+    constructor(model: M, view: V) {
+        this.init(model, view);
+    }
 
-  protected get model(): M {
-    return this._model;
-  }
+    protected execute(): void {}
 
-  protected get view(): V {
-    return this._view;
-  }
+    protected get model(): M {
+        return this._model;
+    }
 
-  private init(model: M, view: V): void {
-    this._model = model;
-    this._view = view;
-  }
+    protected get view(): V {
+        return this._view;
+    }
+
+    private init(model: M, view: V): void {
+        this._model = model;
+        this._view = view;
+    }
 }
