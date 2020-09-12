@@ -1,7 +1,7 @@
-import {ITanksGameModel} from "../../interface/ITanksGameModel";
-import {ITanksGameView} from "../../interface/ITanksGameView";
+import {IModel} from "../../interface/IModel";
+import {IView} from "../../interface/IView";
 
-export class BaseCommand<M extends ITanksGameModel, V extends ITanksGameView> {
+export class BaseCommand<M extends IModel, V extends IView> {
     private _model: M;
     private _view: V;
 
@@ -9,7 +9,7 @@ export class BaseCommand<M extends ITanksGameModel, V extends ITanksGameView> {
         this.init(model, view);
     }
 
-    protected execute(): void {}
+    public execute(): void {}
 
     protected get model(): M {
         return this._model;

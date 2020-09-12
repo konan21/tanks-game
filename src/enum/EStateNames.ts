@@ -1,5 +1,6 @@
-export enum ETanksGameStateNames {
+export enum EStateNames {
     PRELOADING = "PRELOADING",
+    MAIN_MENU = "MAIN_MENU",
     START_SCREEN = "START_SCREEN",
     ACTIVE_GAME = "ACTIVE_GAME",
     OPTIONS_MENU = "OPTIONS_MENU",

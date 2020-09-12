@@ -2,7 +2,7 @@
     "name": "pixi_tanks_game",
     "version": "0.0.0",
     "description": "",
-    "main": "src/TanksGameContext.ts",
+    "main": "src/Context.ts",
     "scripts": {
         "prettier-check": "prettier --check .",
         "prettier-write": "prettier --write .",
@@ -32,6 +32,7 @@
     },
     "dependencies": {
         "lodash": "^4.17.20",
+        "pixi-sound": "^3.0.5",
         "pixi-spine": "^2.1.9",
         "pixi.js": "^5.3.2",
         "signals": "^1.0.0"

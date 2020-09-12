@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
     mode: "development",
     devtool: "inline-source-map",
-    entry: ["./src/TanksGameContext.ts"],
+    entry: ["./src/Context.ts"],
     module: {
         rules: [
             {

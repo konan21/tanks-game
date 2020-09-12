@@ -1,25 +1,22 @@
 import {isNil} from "lodash";
-import {TanksGameContext} from "../TanksGameContext";
-import {ITanksGameView} from "../interface/ITanksGameView";
-import {ITanksGameModel} from "../interface/ITanksGameModel";
-import {ITanksGameContext} from "../interface/ITanksGameContext";
-import {ITanksGameController} from "../interface/ITanksGameController";
-import {ITanksGameCommand} from "../interface/ITanksGameCommand";
+import {Context} from "../Context";
+import {IController} from "../interface/IController";
+import {ICommand} from "../interface/ICommand";
 
-export class TanksGameController implements ITanksGameController {
-    private _context: TanksGameContext;
+export class Controller implements IController {
+    private _context: Context;
     private _commands: Map<string, Function> = new Map(); // {[id: string]: Function};
-    private _executedCommands: Map<string, ITanksGameCommand> = new Map(); // {[id: string]: ITanksGameCommand};
+    private _executedCommands: Map<string, ICommand> = new Map(); // {[id: string]: ICommand};
 
-    constructor(context: TanksGameContext) {
+    constructor(context: Context) {
         this._context = context;
     }
 
-    public get context(): TanksGameContext {
+    public get context(): Context {
         return this._context;
     }
 
-    public set context(value: TanksGameContext) {
+    public set context(value: Context) {
         this._context = value;
     }
 
@@ -27,7 +24,7 @@ export class TanksGameController implements ITanksGameController {
         if (!this.hasCommand(alias)) {
             throw new Error("Can't execute command! It should be registered first.");
         }
-        let command: ITanksGameCommand;
+        let command: ICommand;
         if (!isNil(this._executedCommands.get(alias))) {
             command = this._executedCommands.get(alias);
         } else {

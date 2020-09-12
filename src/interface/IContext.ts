@@ -1,4 +1,4 @@
-export interface ITanksGameContext<M, V, C> {
+export interface IContext<M, V, C> {
     init(): void;
     getModel(): M;
     getView(): V;

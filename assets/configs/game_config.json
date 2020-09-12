@@ -1,0 +1,5 @@
+{
+    "sceneWidth": 1024,
+    "sceneHeight": 768,
+    "subConfigs": ["atlas_names/atlases.json", "sound_names/sounds.json"]
+}

@@ -1,4 +1,4 @@
-export enum ETanksGameAssetsNames {
+export enum EAssetsNames {
     SOUNDS = "sounds",
     SPRITESHEETS = "spritesheets",
 }

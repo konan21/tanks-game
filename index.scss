@@ -5,12 +5,18 @@ html {
 body {
     margin: 0;
     padding: 0;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
 }
 
 #root {
-    display: flex;
-    justify-content: center;
-    align-content: center;
+    margin: auto;
+    //display: flex;
+    //justify-content: center;
+    //align-content: center;
 }
 
 canvas {
