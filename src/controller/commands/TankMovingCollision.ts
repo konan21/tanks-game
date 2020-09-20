@@ -45,6 +45,8 @@ export class TankMovingCollision extends BaseCommand<Model, View> {
                     } else if (this.model.tileToRemove.name.includes("Enemy Tank")) {
                         this.view.map.removeTile(this.model.tileToRemove);
                         this.view.enemyTank.destroy();
+                    } else if (this.model.tileToRemove.name.includes("eagle")) {
+                        console.log("player shooting in eagle");
                     }
                 }
             });

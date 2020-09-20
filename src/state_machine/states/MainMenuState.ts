@@ -15,7 +15,7 @@ export class MainMenuState<IM extends IModel, IV extends IView> extends Abstract
         );
 
         // TODO: remove it
-        this.model.stateMachine.transition(EStateNames.ACTIVE_GAME);
+        // this.model.stateMachine.transition(EStateNames.ACTIVE_GAME);
     }
 
     public onLeave(): void {

@@ -54,7 +54,10 @@ export class EnemyTankMovingCollision extends BaseCommand<Model, View> {
                     this.view.enemyTank.removeBullet(item);
                     if (this.model.tileToRemove.name.includes("small_wall")) {
                         this.view.map.removeTile(this.model.tileToRemove);
-                    } else if (this.model.tileToRemove.name.includes("Player Tank")) {
+                    } else if (
+                        this.model.tileToRemove.name.includes("Player Tank") ||
+                        this.model.tileToRemove.name.includes("eagle")
+                    ) {
                         this.model.stateMachine.transition(EStateNames.GAME_OVER_LOSE);
                         console.log("GAME OVER BITCH!!!");
                     }
