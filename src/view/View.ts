@@ -9,11 +9,13 @@ import {MainMenuSceneView} from "./MainMenuSceneView";
 import {ActiveGameSceneView} from "./ActiveGameSceneView";
 import {MapView} from "./MapView";
 import {TankView} from "./TankView";
+import {EnemyTankView} from "./EnemyTankView";
 
 export class View implements IView {
     public scenes: Map<string, SceneView> = new Map();
     private _map: MapView = new MapView();
     private _tank: TankView;
+    private _enemyTank: EnemyTankView;
     private _app: Application;
     private _preloadingScene: PreloadingSceneView;
     private _mainMenuScene: MainMenuSceneView;
@@ -53,6 +55,17 @@ export class View implements IView {
 
     public set tank(tank: TankView) {
         this._tank = tank;
+    }
+
+    public get enemyTank(): EnemyTankView {
+        if (isNil(this._enemyTank)) {
+            console.log("EnemyTankView class is not initialized!");
+        }
+        return this._enemyTank;
+    }
+
+    public set enemyTank(tank: EnemyTankView) {
+        this._enemyTank = tank;
     }
 
     public get preloadingScene(): PreloadingSceneView {

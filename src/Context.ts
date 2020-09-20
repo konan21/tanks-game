@@ -72,27 +72,23 @@ export class Context implements IContext<IModel, IView, IController> {
             }
 
             // tank fire
-            if (this._view.tank.bullets.length > 0) {
-                each(this._view.tank.bullets, (item) => {
-                    // this._model.tank.bulletPosition = {
-                    //     x: item.bullet.position.x + item.position.x * this._model.tank.bulletSpeed,
-                    //     y: item.bullet.position.y + item.position.y * this._model.tank.bulletSpeed,
-                    // };
-                    // item.bullet.position.set(this._model.tank.bulletPosition.x, this._model.tank.bulletPosition.y);
-
+            if (this._view.tank.bullets.size > 0) {
+                this._view.tank.bullets.forEach((item: {bullet: Sprite; position: IPointData}) => {
                     item.bullet.position.x += item.position.x * this._model.tank.bulletSpeed;
                     item.bullet.position.y += item.position.y * this._model.tank.bulletSpeed;
 
-                    if (
-                        some(this._view.map.tiles, (tile: Sprite) => {
-                            return this._model.testHit(
-                                {displayObj: item.bullet, isStatic: false},
-                                {displayObj: tile, isStatic: true}
-                            );
-                        })
-                    ) {
-                        this._view.map.removeTile(item.bullet);
-                        // item.bullet.position.set(this._model.tank.bulletPosition.x, this._model.tank.bulletPosition.y);
+                    const checkBulletCollision = (tile: Sprite) => {
+                        return this._model.testHit(
+                            {displayObj: item.bullet, isStatic: false},
+                            {displayObj: tile, isStatic: true}
+                        );
+                    };
+
+                    if (some(this._view.map.tiles, checkBulletCollision)) {
+                        this._view.tank.removeBullet(item);
+                        if (this._model.tileToRemove.name.includes("small_wall")) {
+                            this._view.map.removeTile(this._model.tileToRemove);
+                        }
                     }
                 });
             }

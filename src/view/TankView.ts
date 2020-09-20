@@ -1,10 +1,10 @@
 import {Container, IPointData, Sprite, Texture} from "pixi.js";
 import {keyboard, TKey} from "../util/keyboard";
+import {StringUtil} from "../util/StringUtil";
 
 export class TankView {
     public direction: string = "top";
-    public bullets: Array<{bullet: Sprite; position: IPointData}> = [];
-    public currentBullet: Sprite;
+    public bullets: Map<string, {bullet: Sprite; position: IPointData}> = new Map();
     public position: IPointData = {x: 0, y: 0};
     private _display: Container = new Container();
     private _bulletTexture: Texture;
@@ -13,6 +13,7 @@ export class TankView {
     private _keyRight: TKey = keyboard("ArrowRight");
     private _keyDown: TKey = keyboard("ArrowDown");
     private _keySpace: TKey = keyboard(" ");
+    private _bulletCounter: number = 0;
 
     constructor(tankTexture: Texture, bulletTexture: Texture, name?: string) {
         this._display.name = `${name ? name + " " : ""}Tank`;
@@ -26,37 +27,44 @@ export class TankView {
         return this._display;
     }
 
-    private fire(): void {
+    public removeBullet(item: {bullet: Sprite; position: IPointData}): void {
+        // item.position.x = 0;
+        // item.position.y = 0;
+        // item.bullet.position.set(-item.bullet.width, -item.bullet.height);
+        this._display.parent.removeChild(item.bullet);
+        if (this.bullets.has(item.bullet.name)) {
+            this.bullets.delete(item.bullet.name);
+        }
+    }
+
+    public fire(): void {
         console.log("FIRE!");
 
         const bullet: Sprite = new Sprite(this._bulletTexture);
         const position: IPointData = {x: 0, y: 0};
         bullet.position.set(this._display.position.x, this._display.position.y);
+        bullet.name = `${StringUtil.getFileName(this._bulletTexture.textureCacheIds[0])}_${this._bulletCounter++}`;
         this._display.parent.addChild(bullet);
 
         switch (this.direction) {
             case "top":
-                // bullet.position.x = 0;
                 position.y = -1;
                 break;
             case "right":
                 position.x = 1;
-                // bullet.position.y = 0;
                 break;
             case "bottom":
-                // bullet.position.x = 0;
                 position.y = 1;
                 break;
             case "left":
                 position.x = -1;
-                // bullet.position.y = 0;
                 break;
             default:
-                console.warn("tank direction didn't set");
+                console.warn(`${this._display.name} direction didn't set`);
                 break;
         }
 
-        this.bullets.push({
+        this.bullets.set(bullet.name, {
             bullet: bullet,
             position: position,
         });
@@ -67,6 +75,7 @@ export class TankView {
         this._display.addChild(tank);
     }
 
+    // TODO: move method to the Command & position, angle, direction move to TankModel
     private addKeyboardEventListeners(): void {
         // Left arrow key `press` method
         this._keyLeft.press = () => {

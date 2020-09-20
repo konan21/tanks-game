@@ -8,6 +8,8 @@ import {TankView} from "../../view/TankView";
 import {TankModel} from "../../model/TankModel";
 
 export class LoadMapCommand extends BaseCommand<Model, View> {
+    private _mainTileToCalc: Texture;
+
     public execute() {
         let tile: number = 0;
         let x: number = 0;
@@ -41,7 +43,9 @@ export class LoadMapCommand extends BaseCommand<Model, View> {
                         this.view.map.addTile(x, y, tileTexture, "small_walls");
                         break;
                     case 2:
-                        tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.WALL];
+                        this._mainTileToCalc = tileTexture = this.model.loader.resources.spritesheet.textures[
+                            EImageNames.WALL
+                        ];
                         x = i * tileTexture.width;
                         y = j * tileTexture.height;
                         this.view.map.addTile(x, y, tileTexture, "walls");
@@ -52,15 +56,15 @@ export class LoadMapCommand extends BaseCommand<Model, View> {
                         break;
                     case 7:
                         tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.EAGLE];
-                        x = i * tileTexture.width;
-                        y = j * tileTexture.height;
+                        x = i * this._mainTileToCalc.width;
+                        y = j * this._mainTileToCalc.height;
                         this.view.map.addTile(x, y, tileTexture);
                         break;
                     case 8:
                         const tank: Texture = this.model.loader.resources.spritesheet.textures[EImageNames.TANK];
                         const bullet: Texture = this.model.loader.resources.spritesheet.textures[EImageNames.BULLET];
-                        x = i * tank.width + tank.width / 2;
-                        y = j * tank.height + tank.height / 2;
+                        x = i * this._mainTileToCalc.width + tank.width / 2;
+                        y = j * this._mainTileToCalc.height + tank.height / 2;
                         this.model.tank = new TankModel();
                         this.view.tank = new TankView(tank, bullet);
                         this.view.map.addTank(x, y, this.view.tank.display);

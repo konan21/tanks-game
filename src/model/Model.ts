@@ -1,5 +1,6 @@
 import {isNil, some} from "lodash";
 import {Signal} from "signals";
+import {Container, Sprite} from "pixi.js";
 import {IModel} from "../interface/IModel";
 import {ProxyLoader} from "./ProxyLoader";
 import {TGameConfig} from "../type/TGameConfig";
@@ -12,6 +13,7 @@ export class Model implements IModel {
     public width: number;
     public height: number;
     public deltaTime: number;
+    public tileToRemove: Container | Sprite | undefined;
     public loader: ProxyLoader = new ProxyLoader();
     public onCommandExecute: Signal = new Signal();
     public gameConfig: TGameConfig;
@@ -90,7 +92,16 @@ export class Model implements IModel {
         // check for a collision on the x axis
         if (Math.abs(vx) < combinedHalfWidths) {
             // check for a collision on the y axis
-            hit = Math.abs(vy) < combinedHalfHeights;
+            if (Math.abs(vy) < combinedHalfHeights) {
+                if (displayObj1.name.includes("bullet")) {
+                    this.tileToRemove = displayObj2;
+                } else {
+                    this.tileToRemove = undefined;
+                }
+                hit = true;
+            } else {
+                hit = false;
+            }
         } else {
             hit = false;
         }
