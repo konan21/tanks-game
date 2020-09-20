@@ -4,4 +4,5 @@ export enum ECommandNames {
     LOAD_GAME_CONFIG = "LOAD_GAME_CONFIG",
     LOAD_SUB_CONFIGS = "LOAD_SUB_CONFIGS",
     DRAW_APP = "DRAW_APP",
+    LOAD_MAP = "LOAD_MAP",
 }

@@ -1,7 +1,8 @@
 import * as PIXI from "pixi.js";
 window.PIXI = PIXI;
 import "pixi-spine";
-import {Ticker} from "pixi.js";
+import {IPointData, Sprite, Ticker} from "pixi.js";
+import {each, isNil, some} from "lodash";
 import "../index.scss";
 import {Model} from "./model/Model";
 import {View} from "./view/View";
@@ -18,6 +19,9 @@ import {EStateNames} from "./enum/EStateNames";
 import {LoadSubConfigsCommand} from "./controller/commands/LoadSubConfigsCommand";
 import {EAssetsAliases} from "./enum/EAssetsAliases";
 import {DrawAppCommand} from "./controller/commands/DrawAppCommand";
+import {LoadMapCommand} from "./controller/commands/LoadMapCommand";
+import {ActiveGameState} from "./state_machine/states/ActiveGameState";
+import {PreloadingState} from "./state_machine/states/PreloadingState";
 
 export class Context implements IContext<IModel, IView, IController> {
     private _model: Model;
@@ -27,7 +31,6 @@ export class Context implements IContext<IModel, IView, IController> {
 
     constructor() {
         this.init();
-        // TODO: Start Loading gameConfig from assets (run command etc.)
     }
 
     public init(): void {
@@ -40,10 +43,60 @@ export class Context implements IContext<IModel, IView, IController> {
     }
 
     public gameLoop(deltaTime: number): void {
-        // TODO: set deltaTIme to model
-        // TODO: redraw command (run framesUpdate method from View with deltaTime parameter from Model) and others commands
         this._model.deltaTime = deltaTime;
-        this._view.framesUpdate(this._model.deltaTime);
+        // this._view.framesUpdate(this._model.deltaTime);
+
+        if (this._model.stateMachine.currentState instanceof PreloadingState) {
+            if (this._model.loader.progress !== 100) {
+                this._view.preloadingScene.updateProgressBar(this._model.loader.progress);
+            }
+        } else if (this._model.stateMachine.currentState instanceof ActiveGameState) {
+            this._model.tank.position = {
+                x: this._view.tank.display.position.x + this._view.tank.position.x * this._model.tank.speed,
+                y: this._view.tank.display.position.y + this._view.tank.position.y * this._model.tank.speed,
+            };
+
+            // check for a collision before move tank
+            const checkTankCollision = (tile: Sprite) => {
+                return this._model.testHit(
+                    {
+                        displayObj: this._view.tank.display,
+                        possiblePosition: this._model.tank.position,
+                        isStatic: false,
+                    },
+                    {displayObj: tile, isStatic: true}
+                );
+            };
+            if (!some(this._view.map.tiles, checkTankCollision)) {
+                this._view.tank.display.position.set(this._model.tank.position.x, this._model.tank.position.y);
+            }
+
+            // tank fire
+            if (this._view.tank.bullets.length > 0) {
+                each(this._view.tank.bullets, (item) => {
+                    // this._model.tank.bulletPosition = {
+                    //     x: item.bullet.position.x + item.position.x * this._model.tank.bulletSpeed,
+                    //     y: item.bullet.position.y + item.position.y * this._model.tank.bulletSpeed,
+                    // };
+                    // item.bullet.position.set(this._model.tank.bulletPosition.x, this._model.tank.bulletPosition.y);
+
+                    item.bullet.position.x += item.position.x * this._model.tank.bulletSpeed;
+                    item.bullet.position.y += item.position.y * this._model.tank.bulletSpeed;
+
+                    if (
+                        some(this._view.map.tiles, (tile: Sprite) => {
+                            return this._model.testHit(
+                                {displayObj: item.bullet, isStatic: false},
+                                {displayObj: tile, isStatic: true}
+                            );
+                        })
+                    ) {
+                        this._view.map.removeTile(item.bullet);
+                        // item.bullet.position.set(this._model.tank.bulletPosition.x, this._model.tank.bulletPosition.y);
+                    }
+                });
+            }
+        }
     }
 
     public getModel(): IModel {
@@ -63,11 +116,7 @@ export class Context implements IContext<IModel, IView, IController> {
     }
 
     private createView(): void {
-        this._view = new View({
-            width: this._model.width,
-            height: this._model.height,
-            backgroundColor: 0x000000,
-        });
+        this._view = new View();
     }
 
     private createController(): void {
@@ -80,6 +129,7 @@ export class Context implements IContext<IModel, IView, IController> {
         this._controller.registerCommand(ECommandNames.LOAD_SUB_CONFIGS, LoadSubConfigsCommand);
         this._controller.registerCommand(ECommandNames.LOAD_ASSETS, LoadAssetsCommand);
         this._controller.registerCommand(ECommandNames.DRAW_APP, DrawAppCommand);
+        this._controller.registerCommand(ECommandNames.LOAD_MAP, LoadMapCommand);
     }
 
     private executeCommands(): void {
@@ -102,8 +152,8 @@ export class Context implements IContext<IModel, IView, IController> {
             }
         });
 
-        this._model.onPreloadingStarted.addOnce(() => {
-            this._controller.executeCommand(ECommandNames.LOAD_ASSETS);
+        this._model.onCommandExecute.add((enumCommandName: string) => {
+            this._controller.executeCommand(enumCommandName);
         });
     }
 

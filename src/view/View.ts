@@ -1,5 +1,5 @@
 import {isNil} from "lodash";
-import {Application, Container, Graphics, spine} from "pixi.js";
+import {Application, Container, Graphics, spine, Texture} from "pixi.js";
 import {IView} from "../interface/IView";
 import {TPixiAppOptions} from "../type/TPixiAppOptions";
 import Spine = spine.Spine;
@@ -7,9 +7,13 @@ import {SceneView} from "./SceneView";
 import {PreloadingSceneView} from "./PreloadingSceneView";
 import {MainMenuSceneView} from "./MainMenuSceneView";
 import {ActiveGameSceneView} from "./ActiveGameSceneView";
+import {MapView} from "./MapView";
+import {TankView} from "./TankView";
 
 export class View implements IView {
     public scenes: Map<string, SceneView> = new Map();
+    private _map: MapView = new MapView();
+    private _tank: TankView;
     private _app: Application;
     private _preloadingScene: PreloadingSceneView;
     private _mainMenuScene: MainMenuSceneView;
@@ -19,27 +23,36 @@ export class View implements IView {
 
     public framesUpdate(deltaTime: number): void {}
 
-    public drawApp(width: number, height: number) {
-        this._app = new Application({
-            width: width,
-            height: height,
-            // transparent: true,
-            // backgroundColor: 0x86D0F2
-        });
+    public drawApp(options?: TPixiAppOptions) {
+        if (isNil(options)) {
+            options = {
+                width: 1024,
+                height: 768,
+                // transparent: true,
+                // backgroundColor: 0x86d0f2,
+            };
+        }
+        this._app = new Application(options);
         document.getElementById("root").appendChild(this._app.view);
         this.drawScenes();
+    }
 
-        // const graphics: Graphics = new Graphics();
-        // graphics.beginFill(0xde3249);
-        // graphics.drawRect(0, 0, 100, 100);
-        // graphics.endFill();
-        // graphics.name = "My Rect";
+    public get map(): MapView {
+        if (isNil(this._map)) {
+            console.log("MapView class is not initialized!");
+        }
+        return this._map;
+    }
 
-        // const testScene: SceneView = new SceneView("TEST");
-        // this.addScene(testScene);
-        // testScene.display.addChild(graphics);
+    public get tank(): TankView {
+        if (isNil(this._tank)) {
+            console.log("TankView class is not initialized!");
+        }
+        return this._tank;
+    }
 
-        // this.drawLine();
+    public set tank(tank: TankView) {
+        this._tank = tank;
     }
 
     public get preloadingScene(): PreloadingSceneView {
@@ -80,18 +93,6 @@ export class View implements IView {
         }
         return this._app;
     }
-
-    // private drawLine() {
-    //   const line: Graphics = new Graphics();
-    //   line.lineStyle(10, 0xd5402b, 1);
-    //   line.position.x = this.app.screen.width / 2;
-    //   line.position.y = this.app.screen.height / 2;
-    //   line.pivot.set(0, 140);
-    //   line.rotation = 0.785398;
-    //   line.moveTo(5, 0);
-    //   line.lineTo(5, 280);
-    //   this.app.stage.addChild(line);
-    // }
 
     private drawScenes(): void {
         this._preloadingScene = new PreloadingSceneView(this.app);

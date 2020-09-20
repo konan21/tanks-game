@@ -29,6 +29,7 @@ export class SceneView {
         background.beginFill(color);
         background.drawRect(0, 0, this._app.screen.width, this._app.screen.height);
         background.endFill();
+        background.name = "Background";
         this.display.addChild(background);
     }
 }

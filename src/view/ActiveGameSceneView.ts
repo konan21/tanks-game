@@ -7,10 +7,8 @@ export class ActiveGameSceneView extends SceneView {
         this.addBackground();
     }
 
-    public addMap(): void {
-        const map: Container = new Container();
-
-        this.display.addChild(map);
+    public addMap(mapDisplay: Container): void {
+        this.display.addChild(mapDisplay);
     }
 
     public addPlayer(): void {}

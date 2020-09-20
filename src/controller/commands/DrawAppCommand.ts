@@ -7,6 +7,10 @@ export class DrawAppCommand extends BaseCommand<Model, View> {
     public execute() {
         this.model.gameConfig = this.model.loader.resources[EAssetsAliases.GAME_CONFIG].data;
         this.model.setAppSizes();
-        this.view.drawApp(this.model.width, this.model.height);
+        this.view.drawApp({
+            width: this.model.width,
+            height: this.model.height,
+            backgroundColor: 0x000000,
+        });
     }
 }

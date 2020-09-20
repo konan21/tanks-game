@@ -16,6 +16,7 @@ export class MainMenuSceneView extends SceneView {
         const button: Container = new Container();
         const buttonSkin: Sprite = new Sprite(texture);
 
+        button.name = "Button";
         button.buttonMode = true;
         button.interactive = true;
         button.on("pointerdown", () => {
