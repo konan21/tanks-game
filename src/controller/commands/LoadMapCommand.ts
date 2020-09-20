@@ -6,6 +6,7 @@ import {MapModel} from "../../model/MapModel";
 import {EImageNames} from "../../enum/EImageNames";
 import {TankView} from "../../view/TankView";
 import {TankModel} from "../../model/TankModel";
+import {EnemyTankView} from "../../view/EnemyTankView";
 
 export class LoadMapCommand extends BaseCommand<Model, View> {
     private _mainTileToCalc: Texture;
@@ -70,6 +71,18 @@ export class LoadMapCommand extends BaseCommand<Model, View> {
                         this.view.map.addTank(x, y, this.view.tank.display);
                         break;
                     case 9:
+                        const enemyTank: Texture = this.model.loader.resources.spritesheet.textures[
+                            EImageNames.TANK_ENEMY_RED
+                        ];
+                        const enemyBullet: Texture = this.model.loader.resources.spritesheet.textures[
+                            EImageNames.BULLET_ENEMY
+                        ];
+                        x = i * this._mainTileToCalc.width + enemyTank.width / 2;
+                        y = j * this._mainTileToCalc.height + enemyTank.height / 2;
+                        this.model.enemyTank = new TankModel();
+                        this.view.enemyTank = new EnemyTankView(enemyTank, enemyBullet);
+                        this.view.map.addTank(x, y, this.view.enemyTank.display);
+                        break;
                     case 0:
                         break;
                     default:

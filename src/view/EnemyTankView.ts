@@ -1,26 +1,44 @@
 import {Container, IPointData, Sprite, Texture} from "pixi.js";
-import {keyboard, TKey} from "../util/keyboard";
 import {StringUtil} from "../util/StringUtil";
 
 export class EnemyTankView {
+    public isDestroyed: boolean = false;
     public direction: string = "top";
     public bullets: Map<string, {bullet: Sprite; position: IPointData}> = new Map();
     public position: IPointData = {x: 0, y: 0};
     private _display: Container = new Container();
     private _bulletTexture: Texture;
     private _bulletCounter: number = 0;
-    private _fireInterval: number = 3000;
+    private _fireInterval: {instance: any; amount: number} = {instance: undefined, amount: 2000};
 
     constructor(tankTexture: Texture, bulletTexture: Texture, name?: string) {
         this._display.name = `Enemy Tank ${name ? name : ""}`;
         this._bulletTexture = bulletTexture;
         this.draw(tankTexture);
-        this.autoMove();
         this._display.pivot.set(tankTexture.width / 2, tankTexture.height / 2);
+        this._display.angle = 180;
+        this.direction = this.getRandomHorizontalDirection();
+
+        // Fire
+        this._fireInterval.instance = setInterval(() => {
+            this.fire();
+        }, this._fireInterval.amount);
     }
 
     public get display(): Container {
         return this._display;
+    }
+
+    public destroy(): void {
+        this.isDestroyed = true;
+        clearInterval(this._fireInterval.instance);
+
+        // TODO: add sprite animation
+        // animation = new PIXI.AnimatedSprite(sheet.animations["explode"]);
+        // animation.animationSpeed = 0.167;
+        // animation.updateAnchor = true;     // update anchor for each animation frame
+        // animation.play();
+        // app.stage.addChild(animation);
     }
 
     public removeBullet(item: {bullet: Sprite; position: IPointData}): void {
@@ -61,40 +79,71 @@ export class EnemyTankView {
         });
     }
 
+    // TODO: move it from here
+    public autoMove(): void {
+        switch (this.direction) {
+            case "left":
+                this.position.x = -1;
+                this.position.y = 0;
+                break;
+            case "top":
+                this.position.y = -1;
+                this.position.x = 0;
+                break;
+            case "right":
+                this.position.x = 1;
+                this.position.y = 0;
+                break;
+            case "bottom":
+                this.position.y = 1;
+                this.position.x = 0;
+                break;
+            default:
+                console.warn(`${this._display.name} direction in autoMove() is not correct!`);
+                break;
+        }
+    }
+
+    public rotateTank(): void {
+        switch (this.direction) {
+            case "left":
+                this._display.angle = 270;
+                break;
+            case "top":
+                this._display.angle = 0;
+                break;
+            case "right":
+                this._display.angle = 90;
+                break;
+            case "bottom":
+                this._display.angle = 180;
+                break;
+            default:
+                console.warn(`couldn't set angle for ${this._display.name}`);
+                break;
+        }
+    }
+
+    public getRandomDirection(): string {
+        return this.randomDirection(["top", "bottom", "left", "right"]);
+    }
+
+    public getRandomVerticalDirection(): string {
+        return this.randomDirection(["top", "bottom"]);
+    }
+
+    public getRandomHorizontalDirection(): string {
+        return this.randomDirection(["left", "right"]);
+    }
+
+    private randomDirection(directions: Array<string>): string {
+        const min: number = 0;
+        const max: number = directions.length - 1;
+        return directions[Math.floor(Math.random() * (max - min + 1)) + min];
+    }
+
     private draw(tankTexture: Texture) {
         const tank: Sprite = new Sprite(tankTexture);
         this._display.addChild(tank);
-    }
-
-    // TODO: move method to the Command & position, angle, direction move to TankModel
-    private autoMove(): void {
-        // Left
-        this.position.x = -1;
-        this.position.y = 0;
-        this._display.angle = 270;
-        this.direction = "left";
-
-        // Up
-        this.position.y = -1;
-        this.position.x = 0;
-        this._display.angle = 0;
-        this.direction = "top";
-
-        // Right
-        this.position.x = 1;
-        this.position.y = 0;
-        this._display.angle = 90;
-        this.direction = "right";
-
-        // Down
-        this.position.y = 1;
-        this.position.x = 0;
-        this._display.angle = 180;
-        this.direction = "bottom";
-
-        // Fire
-        setInterval(() => {
-            this.fire();
-        }, this._fireInterval);
     }
 }

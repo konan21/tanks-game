@@ -13,6 +13,7 @@ export class Model implements IModel {
     public width: number;
     public height: number;
     public deltaTime: number;
+    public time: number = 0;
     public tileToRemove: Container | Sprite | undefined;
     public loader: ProxyLoader = new ProxyLoader();
     public onCommandExecute: Signal = new Signal();
@@ -43,6 +44,24 @@ export class Model implements IModel {
 
     public set tank(tankModel: TankModel) {
         this._tankModel = tankModel;
+    }
+
+    public set enemyTank(tankModel: TankModel) {
+        this._tankModel = tankModel;
+    }
+
+    public get enemyTank(): TankModel {
+        if (isNil(this._tankModel)) {
+            console.log("TankModel class (for enemy) is not initialized!");
+        }
+        return this._tankModel;
+    }
+
+    // TODO: update that shit
+    public runTime(): void {
+        setInterval(() => {
+            this.time++;
+        }, 1000);
     }
 
     public testHit(objOptions1: THitObjectOptions, objOptions2: THitObjectOptions): boolean {

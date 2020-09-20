@@ -1,4 +1,3 @@
-import {isNil} from "lodash";
 import {Application, Container, Sprite, Text, TextStyle, Texture} from "pixi.js";
 import {SceneView} from "./SceneView";
 

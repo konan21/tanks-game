@@ -10,6 +10,7 @@ import {ActiveGameSceneView} from "./ActiveGameSceneView";
 import {MapView} from "./MapView";
 import {TankView} from "./TankView";
 import {EnemyTankView} from "./EnemyTankView";
+import {GameOverSceneView} from "./GameOverSceneView";
 
 export class View implements IView {
     public scenes: Map<string, SceneView> = new Map();
@@ -20,9 +21,13 @@ export class View implements IView {
     private _preloadingScene: PreloadingSceneView;
     private _mainMenuScene: MainMenuSceneView;
     private _activeGameScene: ActiveGameSceneView;
+    private _gameOverScene: GameOverSceneView;
 
     constructor(options?: TPixiAppOptions) {}
 
+    /**
+     * @deprecated
+     */
     public framesUpdate(deltaTime: number): void {}
 
     public drawApp(options?: TPixiAppOptions) {
@@ -80,6 +85,10 @@ export class View implements IView {
         return this._activeGameScene;
     }
 
+    public get gameOverScene(): GameOverSceneView {
+        return this._gameOverScene;
+    }
+
     public addScene(scene: SceneView): void {
         const name: string = scene.display.name;
         if (this.scenes.has(name)) {
@@ -116,5 +125,8 @@ export class View implements IView {
 
         this._activeGameScene = new ActiveGameSceneView(this.app);
         this.addScene(this._activeGameScene);
+
+        this._gameOverScene = new GameOverSceneView(this.app);
+        this.addScene(this._gameOverScene);
     }
 }

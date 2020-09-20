@@ -22,6 +22,8 @@ import {DrawAppCommand} from "./controller/commands/DrawAppCommand";
 import {LoadMapCommand} from "./controller/commands/LoadMapCommand";
 import {ActiveGameState} from "./state_machine/states/ActiveGameState";
 import {PreloadingState} from "./state_machine/states/PreloadingState";
+import {TankMovingCollision} from "./controller/commands/TankMovingCollision";
+import {EnemyTankMovingCollision} from "./controller/commands/EnemyTankMovingCollision";
 
 export class Context implements IContext<IModel, IView, IController> {
     private _model: Model;
@@ -51,47 +53,9 @@ export class Context implements IContext<IModel, IView, IController> {
                 this._view.preloadingScene.updateProgressBar(this._model.loader.progress);
             }
         } else if (this._model.stateMachine.currentState instanceof ActiveGameState) {
-            this._model.tank.position = {
-                x: this._view.tank.display.position.x + this._view.tank.position.x * this._model.tank.speed,
-                y: this._view.tank.display.position.y + this._view.tank.position.y * this._model.tank.speed,
-            };
-
-            // check for a collision before move tank
-            const checkTankCollision = (tile: Sprite) => {
-                return this._model.testHit(
-                    {
-                        displayObj: this._view.tank.display,
-                        possiblePosition: this._model.tank.position,
-                        isStatic: false,
-                    },
-                    {displayObj: tile, isStatic: true}
-                );
-            };
-            if (!some(this._view.map.tiles, checkTankCollision)) {
-                this._view.tank.display.position.set(this._model.tank.position.x, this._model.tank.position.y);
-            }
-
-            // tank fire
-            if (this._view.tank.bullets.size > 0) {
-                this._view.tank.bullets.forEach((item: {bullet: Sprite; position: IPointData}) => {
-                    item.bullet.position.x += item.position.x * this._model.tank.bulletSpeed;
-                    item.bullet.position.y += item.position.y * this._model.tank.bulletSpeed;
-
-                    const checkBulletCollision = (tile: Sprite) => {
-                        return this._model.testHit(
-                            {displayObj: item.bullet, isStatic: false},
-                            {displayObj: tile, isStatic: true}
-                        );
-                    };
-
-                    if (some(this._view.map.tiles, checkBulletCollision)) {
-                        this._view.tank.removeBullet(item);
-                        if (this._model.tileToRemove.name.includes("small_wall")) {
-                            this._view.map.removeTile(this._model.tileToRemove);
-                        }
-                    }
-                });
-            }
+            //TODO: temporary solution - refactor it
+            this._controller.executeCommand(ECommandNames.TANK_MOVING_COLLISION);
+            this._controller.executeCommand(ECommandNames.ENEMY_TANK_MOVING_COLLISION);
         }
     }
 
@@ -126,6 +90,8 @@ export class Context implements IContext<IModel, IView, IController> {
         this._controller.registerCommand(ECommandNames.LOAD_ASSETS, LoadAssetsCommand);
         this._controller.registerCommand(ECommandNames.DRAW_APP, DrawAppCommand);
         this._controller.registerCommand(ECommandNames.LOAD_MAP, LoadMapCommand);
+        this._controller.registerCommand(ECommandNames.TANK_MOVING_COLLISION, TankMovingCollision);
+        this._controller.registerCommand(ECommandNames.ENEMY_TANK_MOVING_COLLISION, EnemyTankMovingCollision);
     }
 
     private executeCommands(): void {

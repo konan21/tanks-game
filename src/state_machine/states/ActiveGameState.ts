@@ -6,6 +6,7 @@ import {ECommandNames} from "../../enum/ECommandNames";
 export class ActiveGameState<IM extends IModel, IV extends IView> extends AbstractState<IM, IV> {
     public onEnter(): void {
         this.view.activeGameScene.show();
+        this.model.runTime();
         this.model.onCommandExecute.dispatch(ECommandNames.LOAD_MAP);
     }
 

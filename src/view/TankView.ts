@@ -16,7 +16,7 @@ export class TankView {
     private _bulletCounter: number = 0;
 
     constructor(tankTexture: Texture, bulletTexture: Texture, name?: string) {
-        this._display.name = `${name ? name + " " : ""}Tank`;
+        this._display.name = `${name ? name + " " : ""}Player Tank`;
         this._bulletTexture = bulletTexture;
         this.draw(tankTexture);
         this.addKeyboardEventListeners();
@@ -38,8 +38,6 @@ export class TankView {
     }
 
     public fire(): void {
-        console.log("FIRE!");
-
         const bullet: Sprite = new Sprite(this._bulletTexture);
         const position: IPointData = {x: 0, y: 0};
         bullet.position.set(this._display.position.x, this._display.position.y);
