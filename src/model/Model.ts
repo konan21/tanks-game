@@ -1,6 +1,10 @@
+// import * as PIXI from "pixi.js";
+// window.PIXI = PIXI;
+// import "pixi-spine";
+import * as PIXI_SOUND from "pixi-sound";
 import {isNil, some} from "lodash";
 import {Signal} from "signals";
-import {Container, Sprite} from "pixi.js";
+import {Container, sound, Sprite} from "pixi.js";
 import {IModel} from "../interface/IModel";
 import {ProxyLoader} from "./ProxyLoader";
 import {TGameConfig} from "../type/TGameConfig";
@@ -55,6 +59,14 @@ export class Model implements IModel {
             console.log("TankModel class (for enemy) is not initialized!");
         }
         return this._tankModel;
+    }
+
+    public playSound(name: string): void {
+        if (PIXI_SOUND.default.supported) {
+            this.loader.resources[name].sound.play();
+        } else {
+            console.warn("Sounds not supported!");
+        }
     }
 
     // TODO: update that shit

@@ -17,6 +17,7 @@ export interface IModel {
     stateMachine: StateMachine;
     tank: TankModel;
     runTime(): void;
+    playSound(name: string): void;
 
     testHit(objOptions1: THitObjectOptions, objOptions2: THitObjectOptions): boolean;
 }

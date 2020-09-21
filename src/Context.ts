@@ -1,8 +1,7 @@
-import * as PIXI from "pixi.js";
-window.PIXI = PIXI;
-import "pixi-spine";
-import {IPointData, Sprite, Ticker} from "pixi.js";
-import {each, isNil, some} from "lodash";
+// import * as PIXI from "pixi.js";
+// window.PIXI = PIXI;
+// import "pixi-spine";
+import {Ticker} from "pixi.js";
 import "../index.scss";
 import {Model} from "./model/Model";
 import {View} from "./view/View";
