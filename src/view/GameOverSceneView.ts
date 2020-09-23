@@ -14,6 +14,7 @@ export class GameOverSceneView extends SceneView {
             fontSize: 72,
             fill: 0xffffff,
         });
+        // texts in one place
         const text: Text = new Text("GAME OVER!", styles);
         text.position.x = this._app.screen.width / 2;
         text.position.y = this._app.screen.height / 2;

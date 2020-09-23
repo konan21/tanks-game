@@ -20,6 +20,7 @@ export class SceneView {
     }
 
     public hide(): void {
+        // inconsistency, in some class you're using this._display
         this.display.alpha = 0;
         this.display.visible = false;
     }

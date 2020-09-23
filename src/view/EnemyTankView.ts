@@ -20,6 +20,7 @@ export class EnemyTankView {
         this.direction = this.getRandomHorizontalDirection();
 
         // Fire
+        // setInterval wrong way for perfomance
         this._fireInterval.instance = setInterval(() => {
             this.fire();
         }, this._fireInterval.amount);
@@ -55,6 +56,7 @@ export class EnemyTankView {
         bullet.name = `${StringUtil.getFileName(this._bulletTexture.textureCacheIds[0])}_${this._bulletCounter++}`;
         this._display.parent.addChild(bullet);
 
+        // "top" "right" "bottom" "left" - can be as constant in one place
         switch (this.direction) {
             case "top":
                 position.y = -1;
@@ -80,6 +82,8 @@ export class EnemyTankView {
     }
 
     // TODO: move it from here
+    // "top" "right" "bottom" "left" - can be as constant in one place
+
     public autoMove(): void {
         switch (this.direction) {
             case "left":
@@ -105,6 +109,7 @@ export class EnemyTankView {
     }
 
     public rotateTank(): void {
+        // "top" "right" "bottom" "left" - can be as constant in one place
         switch (this.direction) {
             case "left":
                 this._display.angle = 270;

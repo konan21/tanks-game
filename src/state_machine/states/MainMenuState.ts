@@ -16,6 +16,7 @@ export class MainMenuState<IM extends IModel, IV extends IView> extends Abstract
         );
 
         // TODO: remove it
+        // sounds names also can be in one place
         this.model.playSound("sound_win");
         // this.model.stateMachine.transition(EStateNames.ACTIVE_GAME);
     }

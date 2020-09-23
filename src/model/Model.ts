@@ -69,6 +69,7 @@ export class Model implements IModel {
         }
     }
 
+    // nice one 😄
     // TODO: update that shit
     public runTime(): void {
         setInterval(() => {
@@ -124,6 +125,7 @@ export class Model implements IModel {
         if (Math.abs(vx) < combinedHalfWidths) {
             // check for a collision on the y axis
             if (Math.abs(vy) < combinedHalfHeights) {
+                // so if "bullet" will be changed, we need to go through all files and rename accordingly
                 if (displayObj1.name.includes("bullet")) {
                     this.tileToRemove = displayObj2;
                 } else {
