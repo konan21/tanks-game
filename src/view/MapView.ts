@@ -27,6 +27,7 @@ export class MapView {
         const tile: Sprite = new Sprite(texture);
         tile.position.set(x, y);
         tile.name = `${StringUtil.getFileName(texture.textureCacheIds[0])}_${this._tiles.length}`;
+        // better to have "walls" "small_walls" as consts
         switch (containerName) {
             case "walls":
                 this._walls.addChild(tile);
@@ -47,6 +48,7 @@ export class MapView {
         } else if (this._smallWalls.getChildByName(tile.name)) {
             this._smallWalls.removeChild(tile);
         }
+        // this can be optimized by splice
         this._tiles = this._tiles.filter((cTile: Container | Sprite) => cTile.name !== tile.name);
     }
 

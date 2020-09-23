@@ -2,6 +2,7 @@ import {Application, Container, Sprite, Text, TextStyle, Texture} from "pixi.js"
 import {SceneView} from "./SceneView";
 
 export class MainMenuSceneView extends SceneView {
+    // if you will have more then one button, you'll have problem with this offset
     private OFFSET: number = 100;
 
     constructor(app: Application) {
@@ -37,6 +38,7 @@ export class MainMenuSceneView extends SceneView {
     }
 
     private addText(): void {
+        // we've same style in game over scene
         const styles: TextStyle = new TextStyle({
             fontFamily: "serif",
             fontSize: 72,

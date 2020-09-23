@@ -44,6 +44,7 @@ export class TankView {
         bullet.name = `${StringUtil.getFileName(this._bulletTexture.textureCacheIds[0])}_${this._bulletCounter++}`;
         this._display.parent.addChild(bullet);
 
+        // "top" "right" "bottom" "left" - can be as constant in one place
         switch (this.direction) {
             case "top":
                 position.y = -1;

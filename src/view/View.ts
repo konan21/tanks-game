@@ -73,6 +73,8 @@ export class View implements IView {
         this._enemyTank = tank;
     }
 
+    // better to have one getter for getting scene by ID
+    // this.scenes ???
     public get preloadingScene(): PreloadingSceneView {
         return this._preloadingScene;
     }
@@ -116,17 +118,33 @@ export class View implements IView {
         return this._app;
     }
 
+    // better to have one getter for getting scene by ID and creating instance of this class
     private drawScenes(): void {
+        // [
+        //     {
+        //         name: 'PreloadingSceneView',
+        //         class:  PreloadingSceneView,
+        //         classInstance: new PreloadingSceneView()
+        //     },
+        //     {
+        //         name: 'PreloadingSceneView',
+        //             class:  PreloadingSceneView
+        //     },
+        //     {
+        //         name: 'PreloadingSceneView',
+        //             class:  PreloadingSceneView
+        //     },
+        //     {
+        //         name: 'PreloadingSceneView',
+        //             class:  PreloadingSceneView
+        //     },
+        // ]
+        //
+        // for()
+        // let scene = new array[3].class(this.app);
+        // this.addScene(scene);
+        //
         this._preloadingScene = new PreloadingSceneView(this.app);
         this.addScene(this._preloadingScene);
-
-        this._mainMenuScene = new MainMenuSceneView(this.app);
-        this.addScene(this._mainMenuScene);
-
-        this._activeGameScene = new ActiveGameSceneView(this.app);
-        this.addScene(this._activeGameScene);
-
-        this._gameOverScene = new GameOverSceneView(this.app);
-        this.addScene(this._gameOverScene);
     }
 }
