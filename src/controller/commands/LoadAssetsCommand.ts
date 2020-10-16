@@ -8,7 +8,7 @@ import {LoaderResource} from "pixi.js";
 import {EAssetsNames} from "../../enum/EAssetsNames";
 
 export class LoadAssetsCommand extends BaseCommand<Model, View> {
-    private files: Array<TFileLoad> = [];
+    private _files: Array<TFileLoad> = [];
 
     public execute() {
         each(this.model.loader.resources, (resource: LoaderResource) => {
@@ -20,13 +20,13 @@ export class LoadAssetsCommand extends BaseCommand<Model, View> {
                 }
             }
         });
-        this.model.loader.load(EAssetsAliases.GAME_ASSETS, this.files);
+        this.model.loader.load(EAssetsAliases.GAME_ASSETS, this._files);
     }
 
     private addFilesToLoad(data: any, folderName: string): void {
         for (let dataKey in data) {
             if (data.hasOwnProperty(dataKey)) {
-                this.files.push({
+                this._files.push({
                     name: folderName === EAssetsNames.SOUNDS ? `sound_${dataKey}` : dataKey,
                     url: this.model.assetsPath + folderName + "/" + data[dataKey],
                 });

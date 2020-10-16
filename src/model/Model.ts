@@ -1,7 +1,5 @@
-// import * as PIXI from "pixi.js";
-// window.PIXI = PIXI;
-// import "pixi-spine";
 import * as PIXI_SOUND from "pixi-sound";
+import {Texture} from "pixi.js";
 import {isNil, some} from "lodash";
 import {Signal} from "signals";
 import {Container, sound, Sprite} from "pixi.js";
@@ -12,6 +10,7 @@ import {StateMachine} from "../state_machine/StateMachine";
 import {TankModel} from "./TankModel";
 import {THitDisplayObject} from "../type/THitDisplayObject";
 import {THitObjectOptions} from "../type/THitObjectOptions";
+import {EImageNames} from "../enum/EImageNames";
 
 export class Model implements IModel {
     public width: number;
@@ -27,8 +26,6 @@ export class Model implements IModel {
     public readonly gameConfigName: string = "game_config.json";
     private _stateMachine: StateMachine = new StateMachine();
     private _tankModel: TankModel;
-
-    constructor() {}
 
     public get stateMachine(): StateMachine {
         return this._stateMachine;
@@ -69,11 +66,15 @@ export class Model implements IModel {
         }
     }
 
-    // TODO: update that shit
+    // TODO: use delta time from ticker instead of that
     public runTime(): void {
         setInterval(() => {
             this.time++;
         }, 1000);
+    }
+
+    public get pointOfMap(): Texture {
+        return this.loader.resources.spritesheet.textures[EImageNames.WALL]; // sizes 36x36
     }
 
     public testHit(objOptions1: THitObjectOptions, objOptions2: THitObjectOptions): boolean {

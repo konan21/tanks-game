@@ -1,3 +1,4 @@
+import {includes} from "lodash";
 import {Texture} from "pixi.js";
 import {BaseCommand} from "./BaseCommand";
 import {Model} from "../../model/Model";
@@ -12,78 +13,29 @@ export class LoadMapCommand extends BaseCommand<Model, View> {
     private _mainTileToCalc: Texture;
 
     public execute() {
-        let tile: number = 0;
-        let x: number = 0;
-        let y: number = 0;
-        let tileTexture: Texture;
-
         for (let i = 0; i < MapModel.cols; i++) {
             for (let j = 0; j < MapModel.rows; j++) {
-                tile = MapModel.getTile(j, i);
+                const tile: number = MapModel.getTile(j, i);
 
                 switch (tile) {
                     case 1:
-                        tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_1];
-                        x = i * tileTexture.width * 2;
-                        y = j * tileTexture.height * 2;
-                        this.view.map.addTile(x, y, tileTexture, "small_walls");
-
-                        tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_2];
-                        x = i * tileTexture.width * 2 + tileTexture.width;
-                        y = j * tileTexture.height * 2;
-                        this.view.map.addTile(x, y, tileTexture, "small_walls");
-
-                        tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_3];
-                        x = i * tileTexture.width * 2;
-                        y = j * tileTexture.height * 2 + tileTexture.height;
-                        this.view.map.addTile(x, y, tileTexture, "small_walls");
-
-                        tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_4];
-                        x = i * tileTexture.width * 2 + tileTexture.width;
-                        y = j * tileTexture.height * 2 + tileTexture.height;
-                        this.view.map.addTile(x, y, tileTexture, "small_walls");
+                        this.createSmallWalls(i, j);
                         break;
                     case 2:
-                        this._mainTileToCalc = tileTexture = this.model.loader.resources.spritesheet.textures[
-                            EImageNames.WALL
-                        ];
-                        x = i * tileTexture.width;
-                        y = j * tileTexture.height;
-                        this.view.map.addTile(x, y, tileTexture, "walls");
-                        break;
-                    case 3:
-                        break;
-                    case 4:
+                        this.createWalls(i, j);
                         break;
                     case 7:
-                        tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.EAGLE];
-                        x = i * this._mainTileToCalc.width;
-                        y = j * this._mainTileToCalc.height;
-                        this.view.map.addTile(x, y, tileTexture);
+                        this.createEagle(i, j);
                         break;
                     case 8:
-                        const tank: Texture = this.model.loader.resources.spritesheet.textures[EImageNames.TANK];
-                        const bullet: Texture = this.model.loader.resources.spritesheet.textures[EImageNames.BULLET];
-                        x = i * this._mainTileToCalc.width + tank.width / 2;
-                        y = j * this._mainTileToCalc.height + tank.height / 2;
-                        this.model.tank = new TankModel();
-                        this.view.tank = new TankView(tank, bullet);
-                        this.view.map.addTank(x, y, this.view.tank.display);
+                        this.createPlayerTank(i, j);
                         break;
                     case 9:
-                        const enemyTank: Texture = this.model.loader.resources.spritesheet.textures[
-                            EImageNames.TANK_ENEMY_RED
-                        ];
-                        const enemyBullet: Texture = this.model.loader.resources.spritesheet.textures[
-                            EImageNames.BULLET_ENEMY
-                        ];
-                        x = i * this._mainTileToCalc.width + enemyTank.width / 2;
-                        y = j * this._mainTileToCalc.height + enemyTank.height / 2;
-                        this.model.enemyTank = new TankModel();
-                        this.view.enemyTank = new EnemyTankView(enemyTank, enemyBullet);
-                        this.view.map.addTank(x, y, this.view.enemyTank.display);
+                        this.createEnemyTank(i, j);
                         break;
                     case 0:
+                    case 3:
+                    case 4:
                         break;
                     default:
                         console.warn("Tile not found!", tile);
@@ -92,5 +44,65 @@ export class LoadMapCommand extends BaseCommand<Model, View> {
             }
         }
         this.view.activeGameScene.addMap(this.view.map.display);
+    }
+
+    private createSmallWalls(i: number, j: number): void {
+        let x: number;
+        let y: number;
+        let tileTexture: Texture;
+
+        tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_1];
+        x = i * tileTexture.width * 2;
+        y = j * tileTexture.height * 2;
+        this.view.map.addTile(x, y, tileTexture, "small_walls");
+
+        tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_2];
+        x = i * tileTexture.width * 2 + tileTexture.width;
+        y = j * tileTexture.height * 2;
+        this.view.map.addTile(x, y, tileTexture, "small_walls");
+
+        tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_3];
+        x = i * tileTexture.width * 2;
+        y = j * tileTexture.height * 2 + tileTexture.height;
+        this.view.map.addTile(x, y, tileTexture, "small_walls");
+
+        tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_4];
+        x = i * tileTexture.width * 2 + tileTexture.width;
+        y = j * tileTexture.height * 2 + tileTexture.height;
+        this.view.map.addTile(x, y, tileTexture, "small_walls");
+    }
+
+    private createWalls(i: number, j: number): void {
+        const tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.WALL];
+        const x = i * tileTexture.width;
+        const y = j * tileTexture.height;
+        this.view.map.addTile(x, y, tileTexture, "walls");
+    }
+
+    private createEagle(i: number, j: number): void {
+        const tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.EAGLE];
+        const x = i * this.model.pointOfMap.width;
+        const y = j * this.model.pointOfMap.height;
+        this.view.map.addTile(x, y, tileTexture);
+    }
+
+    private createPlayerTank(i: number, j: number): void {
+        const tank: Texture = this.model.loader.resources.spritesheet.textures[EImageNames.TANK];
+        const bullet: Texture = this.model.loader.resources.spritesheet.textures[EImageNames.BULLET];
+        const x = i * this.model.pointOfMap.width + tank.width / 2;
+        const y = j * this.model.pointOfMap.height + tank.height / 2;
+        this.model.tank = new TankModel();
+        this.view.tank = new TankView(tank, bullet);
+        this.view.map.addTank(x, y, this.view.tank.display);
+    }
+
+    private createEnemyTank(i: number, j: number): void {
+        const enemyTank: Texture = this.model.loader.resources.spritesheet.textures[EImageNames.TANK_ENEMY_RED];
+        const enemyBullet: Texture = this.model.loader.resources.spritesheet.textures[EImageNames.BULLET_ENEMY];
+        const x = i * this.model.pointOfMap.width + enemyTank.width / 2;
+        const y = j * this.model.pointOfMap.height + enemyTank.height / 2;
+        this.model.enemyTank = new TankModel();
+        this.view.enemyTank = new EnemyTankView(enemyTank, enemyBullet);
+        this.view.map.addTank(x, y, this.view.enemyTank.display);
     }
 }

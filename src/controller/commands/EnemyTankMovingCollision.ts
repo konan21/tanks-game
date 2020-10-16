@@ -59,7 +59,7 @@ export class EnemyTankMovingCollision extends BaseCommand<Model, View> {
                         this.model.tileToRemove.name.includes("eagle")
                     ) {
                         this.model.stateMachine.transition(EStateNames.GAME_OVER_LOSE);
-                        console.log("GAME OVER BITCH!!!");
+                        console.log("GAME OVER!");
                     }
                 }
             });
