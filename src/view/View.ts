@@ -1,8 +1,5 @@
-import {isNil} from "lodash";
+import {each, find, isNil} from "lodash";
 import {Application, Container, Graphics, spine, Texture} from "pixi.js";
-import {IView} from "../interface/IView";
-import {TPixiAppOptions} from "../type/TPixiAppOptions";
-import Spine = spine.Spine;
 import {SceneView} from "./SceneView";
 import {PreloadingSceneView} from "./PreloadingSceneView";
 import {MainMenuSceneView} from "./MainMenuSceneView";
@@ -11,6 +8,11 @@ import {MapView} from "./MapView";
 import {TankView} from "./TankView";
 import {EnemyTankView} from "./EnemyTankView";
 import {GameOverSceneView} from "./GameOverSceneView";
+import {EStateNames} from "../enum/EStateNames";
+import {IView} from "../interface/IView";
+import {TPixiAppOptions} from "../type/TPixiAppOptions";
+import {TScene} from "../type/TScene";
+import Spine = spine.Spine;
 
 export class View implements IView {
     public scenes: Map<string, SceneView> = new Map();
@@ -18,17 +20,11 @@ export class View implements IView {
     private _tank: TankView;
     private _enemyTank: EnemyTankView;
     private _app: Application;
-    private _preloadingScene: PreloadingSceneView;
-    private _mainMenuScene: MainMenuSceneView;
-    private _activeGameScene: ActiveGameSceneView;
-    private _gameOverScene: GameOverSceneView;
+    private _scenes: Array<TScene> = [];
 
-    constructor(options?: TPixiAppOptions) {}
-
-    /**
-     * @deprecated
-     */
-    public framesUpdate(deltaTime: number): void {}
+    constructor(options?: TPixiAppOptions) {
+        this.initScenes();
+    }
 
     public drawApp(options?: TPixiAppOptions) {
         if (isNil(options)) {
@@ -73,20 +69,9 @@ export class View implements IView {
         this._enemyTank = tank;
     }
 
-    public get preloadingScene(): PreloadingSceneView {
-        return this._preloadingScene;
-    }
-
-    public get mainMenuScene(): MainMenuSceneView {
-        return this._mainMenuScene;
-    }
-
-    public get activeGameScene(): ActiveGameSceneView {
-        return this._activeGameScene;
-    }
-
-    public get gameOverScene(): GameOverSceneView {
-        return this._gameOverScene;
+    // TODO: remove any
+    public getSceneByName(name: string): any {
+        return find(this._scenes, (scene: TScene) => scene.name === name).classInstance;
     }
 
     public addScene(scene: SceneView): void {
@@ -116,17 +101,31 @@ export class View implements IView {
         return this._app;
     }
 
+    private initScenes(): void {
+        this._scenes = [
+            {
+                name: EStateNames.PRELOADING,
+                class: PreloadingSceneView,
+            },
+            {
+                name: EStateNames.MAIN_MENU,
+                class: MainMenuSceneView,
+            },
+            {
+                name: EStateNames.ACTIVE_GAME,
+                class: ActiveGameSceneView,
+            },
+            {
+                name: EStateNames.GAME_OVER_LOSE,
+                class: GameOverSceneView,
+            },
+        ];
+    }
+
     private drawScenes(): void {
-        this._preloadingScene = new PreloadingSceneView(this.app);
-        this.addScene(this._preloadingScene);
-
-        this._mainMenuScene = new MainMenuSceneView(this.app);
-        this.addScene(this._mainMenuScene);
-
-        this._activeGameScene = new ActiveGameSceneView(this.app);
-        this.addScene(this._activeGameScene);
-
-        this._gameOverScene = new GameOverSceneView(this.app);
-        this.addScene(this._gameOverScene);
+        each(this._scenes, (scene: TScene) => {
+            scene.classInstance = new scene.class(this.app);
+            this.addScene(scene.classInstance);
+        });
     }
 }

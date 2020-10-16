@@ -2,6 +2,7 @@ import {Application, Container, Sprite, Text, TextStyle, Texture} from "pixi.js"
 import {SceneView} from "./SceneView";
 
 export class MainMenuSceneView extends SceneView {
+    // TODO: remove it (send position as parameter)
     private OFFSET: number = 100;
 
     constructor(app: Application) {
@@ -36,6 +37,7 @@ export class MainMenuSceneView extends SceneView {
         this.display.addChild(button);
     }
 
+    // TODO: move styles to one place (as constants)
     private addText(): void {
         const styles: TextStyle = new TextStyle({
             fontFamily: "serif",

@@ -125,6 +125,8 @@ export class Model implements IModel {
         if (Math.abs(vx) < combinedHalfWidths) {
             // check for a collision on the y axis
             if (Math.abs(vy) < combinedHalfHeights) {
+                // TODO: update logic, because
+                //  if "bullet" will be changed, we need to go through all files and rename accordingly
                 if (displayObj1.name.includes("bullet")) {
                     this.tileToRemove = displayObj2;
                 } else {

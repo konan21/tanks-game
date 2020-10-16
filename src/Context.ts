@@ -49,7 +49,7 @@ export class Context implements IContext<IModel, IView, IController> {
 
         if (this._model.stateMachine.currentState instanceof PreloadingState) {
             if (this._model.loader.progress !== 100) {
-                this._view.preloadingScene.updateProgressBar(this._model.loader.progress);
+                this._view.getSceneByName(EStateNames.PRELOADING).updateProgressBar(this._model.loader.progress);
             }
         } else if (this._model.stateMachine.currentState instanceof ActiveGameState) {
             //TODO: temporary solution - refactor it

@@ -8,6 +8,8 @@ import {EImageNames} from "../../enum/EImageNames";
 import {TankView} from "../../view/TankView";
 import {TankModel} from "../../model/TankModel";
 import {EnemyTankView} from "../../view/EnemyTankView";
+import {EAssetsNames} from "../../enum/EAssetsNames";
+import {EStateNames} from "../../enum/EStateNames";
 
 export class LoadMapCommand extends BaseCommand<Model, View> {
     private _mainTileToCalc: Texture;
@@ -43,7 +45,7 @@ export class LoadMapCommand extends BaseCommand<Model, View> {
                 }
             }
         }
-        this.view.activeGameScene.addMap(this.view.map.display);
+        this.view.getSceneByName(EStateNames.ACTIVE_GAME).addMap(this.view.map.display);
     }
 
     private createSmallWalls(i: number, j: number): void {
@@ -54,29 +56,29 @@ export class LoadMapCommand extends BaseCommand<Model, View> {
         tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_1];
         x = i * tileTexture.width * 2;
         y = j * tileTexture.height * 2;
-        this.view.map.addTile(x, y, tileTexture, "small_walls");
+        this.view.map.addTile(x, y, tileTexture, EAssetsNames.SMALL_WALLS);
 
         tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_2];
         x = i * tileTexture.width * 2 + tileTexture.width;
         y = j * tileTexture.height * 2;
-        this.view.map.addTile(x, y, tileTexture, "small_walls");
+        this.view.map.addTile(x, y, tileTexture, EAssetsNames.SMALL_WALLS);
 
         tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_3];
         x = i * tileTexture.width * 2;
         y = j * tileTexture.height * 2 + tileTexture.height;
-        this.view.map.addTile(x, y, tileTexture, "small_walls");
+        this.view.map.addTile(x, y, tileTexture, EAssetsNames.SMALL_WALLS);
 
         tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.SMALL_WALL_4];
         x = i * tileTexture.width * 2 + tileTexture.width;
         y = j * tileTexture.height * 2 + tileTexture.height;
-        this.view.map.addTile(x, y, tileTexture, "small_walls");
+        this.view.map.addTile(x, y, tileTexture, EAssetsNames.SMALL_WALLS);
     }
 
     private createWalls(i: number, j: number): void {
         const tileTexture = this.model.loader.resources.spritesheet.textures[EImageNames.WALL];
         const x = i * tileTexture.width;
         const y = j * tileTexture.height;
-        this.view.map.addTile(x, y, tileTexture, "walls");
+        this.view.map.addTile(x, y, tileTexture, EAssetsNames.WALLS);
     }
 
     private createEagle(i: number, j: number): void {

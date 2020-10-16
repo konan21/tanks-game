@@ -65,6 +65,7 @@ export class PreloadingSceneView extends SceneView {
             fontWeight: "bold",
             fill: 0xffffff,
         });
+        // TODO: move text to one place (assets/translations)
         const loadingText: Text = new Text("Loading...", styles);
         loadingText.position.x = this._app.screen.width / 2;
         loadingText.position.y = this._app.screen.height / 2 - this.OFFSET;

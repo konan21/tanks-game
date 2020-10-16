@@ -20,6 +20,7 @@ export class EnemyTankView {
         this.direction = this.getRandomHorizontalDirection();
 
         // Fire
+        // TODO: update - setInterval wrong way for performance
         this._fireInterval.instance = setInterval(() => {
             this.fire();
         }, this._fireInterval.amount);

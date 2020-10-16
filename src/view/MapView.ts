@@ -1,6 +1,7 @@
 import {isEqual, some} from "lodash";
 import {Container, DisplayObject, ParticleContainer, Sprite, Texture} from "pixi.js";
 import {StringUtil} from "../util/StringUtil";
+import {EAssetsNames} from "../enum/EAssetsNames";
 
 export class MapView {
     private _display: Container = new Container();
@@ -28,10 +29,10 @@ export class MapView {
         tile.position.set(x, y);
         tile.name = `${StringUtil.getFileName(texture.textureCacheIds[0])}_${this._tiles.length}`;
         switch (containerName) {
-            case "walls":
+            case EAssetsNames.WALLS:
                 this._walls.addChild(tile);
                 break;
-            case "small_walls":
+            case EAssetsNames.SMALL_WALLS:
                 this._smallWalls.addChild(tile);
                 break;
             default:
@@ -47,6 +48,7 @@ export class MapView {
         } else if (this._smallWalls.getChildByName(tile.name)) {
             this._smallWalls.removeChild(tile);
         }
+        // TODO: optimize using splice()
         this._tiles = this._tiles.filter((cTile: Container | Sprite) => cTile.name !== tile.name);
     }
 

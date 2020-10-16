@@ -15,13 +15,13 @@ export class SceneView {
     }
 
     public show(): void {
-        this.display.alpha = 1;
-        this.display.visible = true;
+        this._display.alpha = 1;
+        this._display.visible = true;
     }
 
     public hide(): void {
-        this.display.alpha = 0;
-        this.display.visible = false;
+        this._display.alpha = 0;
+        this._display.visible = false;
     }
 
     public addBackground(color: number = 0x112233) {
@@ -30,6 +30,6 @@ export class SceneView {
         background.drawRect(0, 0, this._app.screen.width, this._app.screen.height);
         background.endFill();
         background.name = "Background";
-        this.display.addChild(background);
+        this._display.addChild(background);
     }
 }
