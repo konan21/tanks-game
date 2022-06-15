@@ -16,9 +16,9 @@ import Spine = spine.Spine;
 
 export class View implements IView {
     public scenes: Map<string, SceneView> = new Map();
+    public enemyTanks: Array<EnemyTankView> = [];
     private _map: MapView = new MapView();
     private _tank: TankView;
-    private _enemyTank: EnemyTankView;
     private _app: Application;
     private _scenes: Array<TScene> = [];
 
@@ -58,20 +58,21 @@ export class View implements IView {
         this._tank = tank;
     }
 
-    public get enemyTank(): EnemyTankView {
-        if (isNil(this._enemyTank)) {
-            console.log("EnemyTankView class is not initialized!");
-        }
-        return this._enemyTank;
-    }
-
-    public set enemyTank(tank: EnemyTankView) {
-        this._enemyTank = tank;
-    }
+    // public get enemyTank(): EnemyTankView {
+    //     // if (isNil(this._enemyTank)) {
+    //     //     console.log("EnemyTankView class is not initialized!");
+    //     // }
+    //     return this._enemyTank;
+    // }
+    //
+    // public set enemyTank(tank: EnemyTankView) {
+    //     this._enemyTank = tank;
+    // }
 
     // TODO: remove any
     public getSceneByName(name: string): any {
-        return find(this._scenes, (scene: TScene) => scene.name === name).classInstance;
+        const scene: any = find(this._scenes, (scene: TScene) => scene.name === name);
+        return scene?.classInstance;
     }
 
     public addScene(scene: SceneView): void {
@@ -106,18 +107,22 @@ export class View implements IView {
             {
                 name: EStateNames.PRELOADING,
                 class: PreloadingSceneView,
+                classInstance: undefined,
             },
             {
                 name: EStateNames.MAIN_MENU,
                 class: MainMenuSceneView,
+                classInstance: undefined,
             },
             {
                 name: EStateNames.ACTIVE_GAME,
                 class: ActiveGameSceneView,
+                classInstance: undefined,
             },
             {
                 name: EStateNames.GAME_OVER_LOSE,
                 class: GameOverSceneView,
+                classInstance: undefined,
             },
         ];
     }

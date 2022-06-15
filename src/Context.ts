@@ -97,6 +97,10 @@ export class Context implements IContext<IModel, IView, IController> {
         this._controller.executeCommand(ECommandNames.INIT_STATE_MACHINE);
         this._controller.executeCommand(ECommandNames.LOAD_GAME_CONFIG);
 
+        // window.addEventListener("resize", () => {
+        //     this._view.app.renderer.resize(window.innerWidth, window.innerHeight);
+        // });
+
         this._model.loader.onAssetsLoaded.add((alias: string) => {
             switch (alias) {
                 case EAssetsAliases.GAME_CONFIG:
@@ -124,5 +128,3 @@ export class Context implements IContext<IModel, IView, IController> {
         this._ticker.start();
     }
 }
-
-new Context();

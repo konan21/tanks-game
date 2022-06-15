@@ -1,8 +1,9 @@
 import {BaseCommand} from "./BaseCommand";
 import {Model} from "../../model/Model";
 import {View} from "../../view/View";
-import {IPointData, Sprite} from "pixi.js";
-import {some} from "lodash";
+import {EnemyTankView} from "../../view/EnemyTankView";
+import {IPointData, Sprite, Container} from "pixi.js";
+import {some, find} from "lodash";
 
 export class TankMovingCollision extends BaseCommand<Model, View> {
     public execute() {
@@ -31,21 +32,26 @@ export class TankMovingCollision extends BaseCommand<Model, View> {
                 item.bullet.position.x += item.position.x * this.model.tank.bulletSpeed;
                 item.bullet.position.y += item.position.y * this.model.tank.bulletSpeed;
 
-                const checkBulletCollision = (tile: Sprite) => {
+                const checkBulletCollision = (tile: Sprite | Container) => {
                     return this.model.testHit(
                         {displayObj: item.bullet, isStatic: false},
                         {displayObj: tile, isStatic: true}
                     );
                 };
 
-                if (some([...this.view.map.tiles, this.view.enemyTank.display], checkBulletCollision)) {
+                const enemyTanksDisplays = this.view.enemyTanks.map((enemyTankView: EnemyTankView) => enemyTankView.display);
+                if (some([...this.view.map.tiles, ...enemyTanksDisplays], checkBulletCollision)) {
                     this.view.tank.removeBullet(item);
-                    if (this.model.tileToRemove.name.includes("small_wall")) {
+                    const tileName = this.model.tileToRemove.name;
+                    if (tileName.includes("small_wall")) {
                         this.view.map.removeTile(this.model.tileToRemove);
-                    } else if (this.model.tileToRemove.name.includes("Enemy Tank")) {
+                    } else if (tileName.includes("Enemy Tank")) {
+                        const enemyTank = find(this.view.enemyTanks, (enemyTankView: EnemyTankView) => {
+                            return enemyTankView.display === this.model.tileToRemove;
+                        });
+                        enemyTank.destroy();
                         this.view.map.removeTile(this.model.tileToRemove);
-                        this.view.enemyTank.destroy();
-                    } else if (this.model.tileToRemove.name.includes("eagle")) {
+                    } else if (tileName.includes("eagle")) {
                         console.log("player shooting in eagle");
                     }
                 }

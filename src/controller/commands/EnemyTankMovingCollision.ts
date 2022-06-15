@@ -2,46 +2,59 @@ import {BaseCommand} from "./BaseCommand";
 import {Model} from "../../model/Model";
 import {View} from "../../view/View";
 import {IPointData, Sprite} from "pixi.js";
-import {some} from "lodash";
+import {some, isNil, forEach} from "lodash";
 import {EStateNames} from "../../enum/EStateNames";
+import {EnemyTankView} from "../../view/EnemyTankView";
+import {TankModel} from "../../model/TankModel";
 
 export class EnemyTankMovingCollision extends BaseCommand<Model, View> {
-    public execute() {
-        if (this.view.enemyTank.isDestroyed) {
+    public execute(): void {
+        forEach(this.view.enemyTanks, (enemyTankView: EnemyTankView, index: number) => {
+            const enemyTankModel = this.model.enemyTankModels[index];
+            if (isNil(enemyTankModel)) {
+                console.warn("Enemy Tank Model is not defined! Automove and collisions will not work!");
+                return;
+            }
+            this.enemyCollisions(enemyTankView, enemyTankModel);
+        });
+    }
+
+    public enemyCollisions(enemyTankView: EnemyTankView, enemyTankModel: TankModel): void {
+        if (enemyTankView.isDestroyed) {
             return;
         }
         // enemy tank move collision
-        this.model.enemyTank.position = {
-            x: this.view.enemyTank.display.position.x + this.view.enemyTank.position.x * this.model.enemyTank.speed,
-            y: this.view.enemyTank.display.position.y + this.view.enemyTank.position.y * this.model.enemyTank.speed,
+        enemyTankModel.position = {
+            x: enemyTankView.display.position.x + enemyTankView.position.x * enemyTankModel.speed,
+            y: enemyTankView.display.position.y + enemyTankView.position.y * enemyTankModel.speed,
         };
-        this.view.enemyTank.autoMove();
+        enemyTankView.autoMove();
         // if (this.model.time % 3 === 0) {
-        //     this.view.enemyTank.direction = this.view.enemyTank.getRandomDirection();
+        //     enemyTankView.direction = enemyTankView.getRandomDirection();
         // }
         const checkEnemyTankCollision = (tile: Sprite) => {
             return this.model.testHit(
                 {
-                    displayObj: this.view.enemyTank.display,
-                    possiblePosition: this.model.enemyTank.position,
+                    displayObj: enemyTankView.display,
+                    possiblePosition: enemyTankModel.position,
                     isStatic: false,
                 },
                 {displayObj: tile, isStatic: true}
             );
         };
         if (!some(this.view.map.tiles, checkEnemyTankCollision)) {
-            this.view.enemyTank.rotateTank();
-            this.view.enemyTank.display.position.set(this.model.enemyTank.position.x, this.model.enemyTank.position.y);
-            // console.log("enemy tank move to " + this.view.enemyTank.direction);
+            enemyTankView.rotateTank();
+            enemyTankView.display.position.set(enemyTankModel.position.x, enemyTankModel.position.y);
+            // console.log("enemy tank move to " + enemyTankView.direction);
         } else {
-            this.view.enemyTank.direction = this.view.enemyTank.getRandomDirection();
+            enemyTankView.direction = enemyTankView.getRandomDirection();
         }
 
         // enemy tank fire
-        if (this.view.enemyTank.bullets.size > 0) {
-            this.view.enemyTank.bullets.forEach((item: {bullet: Sprite; position: IPointData}) => {
-                item.bullet.position.x += item.position.x * this.model.enemyTank.bulletSpeed;
-                item.bullet.position.y += item.position.y * this.model.enemyTank.bulletSpeed;
+        if (enemyTankView.bullets.size > 0) {
+            enemyTankView.bullets.forEach((item: {bullet: Sprite; position: IPointData}) => {
+                item.bullet.position.x += item.position.x * enemyTankModel.bulletSpeed;
+                item.bullet.position.y += item.position.y * enemyTankModel.bulletSpeed;
 
                 const checkEnemyBulletCollision = (tile: Sprite) => {
                     return this.model.testHit(
@@ -51,7 +64,7 @@ export class EnemyTankMovingCollision extends BaseCommand<Model, View> {
                 };
 
                 if (some([...this.view.map.tiles, this.view.tank.display], checkEnemyBulletCollision)) {
-                    this.view.enemyTank.removeBullet(item);
+                    enemyTankView.removeBullet(item);
                     if (this.model.tileToRemove.name.includes("small_wall")) {
                         this.view.map.removeTile(this.model.tileToRemove);
                     } else if (

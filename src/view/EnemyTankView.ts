@@ -1,5 +1,6 @@
 import {Container, IPointData, Sprite, Texture} from "pixi.js";
 import {StringUtil} from "../util/StringUtil";
+import {NumberUtil} from "../util/NumberUtil";
 
 export class EnemyTankView {
     public isDestroyed: boolean = false;
@@ -9,7 +10,7 @@ export class EnemyTankView {
     private _display: Container = new Container();
     private _bulletTexture: Texture;
     private _bulletCounter: number = 0;
-    private _fireInterval: {instance: any; amount: number} = {instance: undefined, amount: 2000};
+    private _fireInterval: {instance: number; amount: number} = {instance: undefined, amount: 2000};
 
     constructor(tankTexture: Texture, bulletTexture: Texture, name?: string) {
         this._display.name = `Enemy Tank ${name ? name : ""}`;
@@ -33,6 +34,9 @@ export class EnemyTankView {
     public destroy(): void {
         this.isDestroyed = true;
         clearInterval(this._fireInterval.instance);
+        this.bullets.forEach(item => {
+            this.removeBullet(item);
+        });
 
         // TODO: add sprite animation
         // animation = new PIXI.AnimatedSprite(sheet.animations["explode"]);
@@ -43,7 +47,9 @@ export class EnemyTankView {
     }
 
     public removeBullet(item: {bullet: Sprite; position: IPointData}): void {
-        this._display.parent.removeChild(item.bullet);
+        if (this._display.parent) {
+            this._display.parent.removeChild(item.bullet);
+        }
         if (this.bullets.has(item.bullet.name)) {
             this.bullets.delete(item.bullet.name);
         }
@@ -140,7 +146,7 @@ export class EnemyTankView {
     private randomDirection(directions: Array<string>): string {
         const min: number = 0;
         const max: number = directions.length - 1;
-        return directions[Math.floor(Math.random() * (max - min + 1)) + min];
+        return directions[NumberUtil.getRandom(min, max)];
     }
 
     private draw(tankTexture: Texture) {

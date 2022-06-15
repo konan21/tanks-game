@@ -1,10 +1,10 @@
-import {IModel} from "../../interface/IModel";
-import {IView} from "../../interface/IView";
+import {Model} from "../../model/Model";
+import {View} from "../../view/View";
 import {AbstractState} from "../AbstractState";
 import {ECommandNames} from "../../enum/ECommandNames";
 import {EStateNames} from "../../enum/EStateNames";
 
-export class ActiveGameState<IM extends IModel, IV extends IView> extends AbstractState<IM, IV> {
+export class ActiveGameState<IM extends Model, IV extends View> extends AbstractState<IM, IV> {
     public onEnter(): void {
         this.view.getSceneByName(EStateNames.ACTIVE_GAME).show();
         this.model.runTime();

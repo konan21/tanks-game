@@ -24,8 +24,9 @@ export class Model implements IModel {
     public readonly assetsPath: string = "assets/";
     public readonly configPath: string = this.assetsPath + "configs/";
     public readonly gameConfigName: string = "game_config.json";
-    private _stateMachine: StateMachine = new StateMachine();
+    public enemyTankModels: Array<TankModel> = [];
     private _tankModel: TankModel;
+    private _stateMachine: StateMachine = new StateMachine();
 
     public get stateMachine(): StateMachine {
         return this._stateMachine;
@@ -47,16 +48,16 @@ export class Model implements IModel {
         this._tankModel = tankModel;
     }
 
-    public set enemyTank(tankModel: TankModel) {
-        this._tankModel = tankModel;
-    }
-
-    public get enemyTank(): TankModel {
-        if (isNil(this._tankModel)) {
-            console.log("TankModel class (for enemy) is not initialized!");
-        }
-        return this._tankModel;
-    }
+    // public set enemyTanks(tankModel: TankModel) {
+    //     this._tankModel = tankModel;
+    // }
+    //
+    // public get enemyTanks(): Array<TankModel> {
+    //     if (isNil(this._tankModel)) {
+    //         console.log("TankModel class (for enemy) is not initialized!");
+    //     }
+    //     return this._tankModel;
+    // }
 
     public playSound(name: string): void {
         if (PIXI_SOUND.default.supported) {

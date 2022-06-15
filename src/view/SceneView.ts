@@ -1,5 +1,12 @@
 import {Application, Container, Graphics} from "pixi.js";
 
+// export interface ISceneView {
+//     display: Container;
+//     show(): void;
+//     hide(): void;
+//     addBackground(): void;
+// }
+
 export class SceneView {
     protected _app: Application;
     private _display: Container = new Container();
@@ -24,7 +31,7 @@ export class SceneView {
         this._display.visible = false;
     }
 
-    public addBackground(color: number = 0x112233) {
+    public addBackground(color: number = 0x112233): void {
         const background: Graphics = new Graphics();
         background.beginFill(color);
         background.drawRect(0, 0, this._app.screen.width, this._app.screen.height);

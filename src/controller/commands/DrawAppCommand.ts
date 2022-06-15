@@ -4,7 +4,7 @@ import {View} from "../../view/View";
 import {EAssetsAliases} from "../../enum/EAssetsAliases";
 
 export class DrawAppCommand extends BaseCommand<Model, View> {
-    public execute() {
+    public execute(): void {
         this.model.gameConfig = this.model.loader.resources[EAssetsAliases.GAME_CONFIG].data;
         this.model.setAppSizes();
         this.view.drawApp({
